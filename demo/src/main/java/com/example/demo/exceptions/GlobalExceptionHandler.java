@@ -1,5 +1,7 @@
 package com.example.demo.exceptions;
 
+import com.example.demo.model.Funcionario;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,16 +14,16 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(
-            MethodArgumentNotValidException ex, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((org.springframework.validation.FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handlerValidationExceptions(MethodArgumentNotValidException m, WebRequest wr) {
+        Map<String, String> erros = new HashMap<>();
+        m.getBindingResult().getAllErrors().forEach((error) -> {
+            String nomeDoCampo = ((org.springframework.validation.FieldError) error).getField();
+            String mensagemDeErro = error.getDefaultMessage();
+            erros.put(nomeDoCampo, mensagemDeErro);
+        });
+
+        return new ResponseEntity<>(erros, HttpStatus.BAD_REQUEST);
+    }
 }

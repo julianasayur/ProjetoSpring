@@ -4,8 +4,10 @@ import com.example.demo.model.Funcionario;
 import com.example.demo.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FuncionarioService {
@@ -21,26 +23,37 @@ public class FuncionarioService {
         return funcionarioRepository.save(funcionario);
     }
 
-    public Funcionario atualizar(Long id, Funcionario funcionario) {
-        //verificar se o id é valido
-        if(funcionarioRepository.existsById(id)) {
-            //atualizar o objeto na base
+    public Funcionario atualizar(Funcionario funcionario, Long id) {
+        if(verificaID(id)) {
+            //verdadeiro
             funcionario.setId(id);
             return funcionarioRepository.save(funcionario);
         }
         return null;
-        // não realiza nenhuma alteração
+    }
+
+    private boolean verificaID(Long id) {
+        if(funcionarioRepository.existsById(id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean deletar(Long id) {
-        if(funcionarioRepository.existsById(id)) {
+        if(verificaID(id)) {
             funcionarioRepository.deleteById(id);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
-    public int qtdFuncionarios () {
+    public int qtdFuncionarios() {
         return funcionarioRepository.findAll().size();
+    }
+
+    public Optional<Funcionario> buscaPorID(Long id) {
+        return funcionarioRepository.findById(id);
     }
 }

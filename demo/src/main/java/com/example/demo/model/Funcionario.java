@@ -12,10 +12,9 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-
-    @NotNull(message = "Campo cpf não pode ser nulo.")
-    @Column(nullable = false)
+    @NotNull
     @Size(min = 11, max = 14)
+    @Column(nullable = false)
     private String cpf;
     @NotNull
     @Column(nullable = false)
