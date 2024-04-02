@@ -1,6 +1,5 @@
 package com.example.demo.exceptions;
 
-import com.example.demo.model.Funcionario;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+
+import com.example.demo.modulos.funcionario.model.Funcionario;
 
 import java.util.HashMap;
 import java.util.Map;

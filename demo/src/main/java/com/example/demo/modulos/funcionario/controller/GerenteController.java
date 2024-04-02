@@ -1,7 +1,8 @@
-package com.example.demo.controller;
+package com.example.demo.modulos.funcionario.controller;
 
-import com.example.demo.model.Gerente;
-import com.example.demo.repository.GerenteRepository;
+import com.example.demo.modulos.funcionario.model.Gerente;
+import com.example.demo.modulos.funcionario.repository.GerenteRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

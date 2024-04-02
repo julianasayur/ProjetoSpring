@@ -1,7 +1,8 @@
-package com.example.demo.repository;
+package com.example.demo.modulos.funcionario.repository;
 
-import com.example.demo.model.Gerente;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.modulos.funcionario.model.Gerente;
 
 public interface GerenteRepository extends JpaRepository<Gerente, Long> {
 }

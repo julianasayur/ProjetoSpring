@@ -1,7 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.modulos.funcionario.service;
 
-import com.example.demo.model.Funcionario;
-import com.example.demo.repository.FuncionarioRepository;
+import com.example.demo.modulos.funcionario.model.Funcionario;
+import com.example.demo.modulos.funcionario.repository.FuncionarioRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,8 +1,9 @@
-package com.example.demo.controller;
+package com.example.demo.modulos.funcionario.controller;
 
-import com.example.demo.model.Funcionario;
-import com.example.demo.repository.FuncionarioRepository;
-import com.example.demo.service.FuncionarioService;
+import com.example.demo.modulos.funcionario.model.Funcionario;
+import com.example.demo.modulos.funcionario.repository.FuncionarioRepository;
+import com.example.demo.modulos.funcionario.service.FuncionarioService;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
