@@ -1,70 +1,50 @@
 package com.example.demo.modulos.funcionario.controller;
 
-import com.example.demo.modulos.funcionario.model.Funcionario;
-import com.example.demo.modulos.funcionario.repository.FuncionarioRepository;
+import com.example.demo.modulos.funcionario.dto.FuncionarioRequest;
+import com.example.demo.modulos.funcionario.dto.FuncionarioResponse;
 import com.example.demo.modulos.funcionario.service.FuncionarioService;
-
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/funcionarios")
+@RequestMapping("/funcionario")
 public class FuncionarioController {
 
     @Autowired
-    FuncionarioService funcionarioService;
+    FuncionarioService service;
 
     @GetMapping
-    public List<Funcionario> listarFuncionarios() {
-        return funcionarioService.listarFuncionarios();
+    public List<FuncionarioResponse> listarFuncionarios() {
+        return service.listarFuncionarios();
     }
 
     @PostMapping
-    public Funcionario criar(@Valid @RequestBody Funcionario funcionario) {
-        return funcionarioService.criar(funcionario);
+    @ResponseStatus(HttpStatus.CREATED)
+    public FuncionarioResponse criar(@Valid @RequestBody FuncionarioResponse request) {
+        return service.criar(request);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@RequestBody Funcionario funcionario, @PathVariable Long id) {
-        //return funcionarioService.atualizar(funcionario, id);
-        if(funcionarioService.atualizar(funcionario, id) == null) {
-            //O id não foi encontrado
-            //return ResponseEntity.notFound().build();
-            String mensagem = "O id informado não existe";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagem);
-        } else {
-            //O id foi encontrado
-            return ResponseEntity.ok(funcionario);
-        }
+    public FuncionarioResponse atualizar(@PathVariable Integer id, @Valid @RequestBody FuncionarioResponse request) {
+        return service.atualizar(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        if(funcionarioService.deletar(id)) {
-            String mensagem = "O id " + id + " foi removido com sucesso.";
-            return ResponseEntity.status(HttpStatus.OK).body(mensagem);
-        } else {
-            String mensagem = "O id informado não existe";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagem);
-        }
+    public void deletar(@PathVariable Integer id) {
+        service.deletar(id);
     }
 
-    @GetMapping("/qtd")
+    @GetMapping("/qtd-funcionarios")
     public int qtdFuncionarios() {
-        return funcionarioService.qtdFuncionarios();
+        return service.qtdFuncionarios();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Funcionario> buscarPorID(@PathVariable Long id) {
-        return funcionarioService.buscaPorID(id);
+    @GetMapping(value = "/{login}/{senha}")
+    public FuncionarioResponse findByLoginAndSenha(@PathVariable String login, @PathVariable String senha) {
+        return service.findByLoginAndSenha(login, senha);
     }
-
-
-
 }

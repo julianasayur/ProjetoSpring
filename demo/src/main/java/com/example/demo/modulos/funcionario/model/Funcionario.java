@@ -1,64 +1,46 @@
 package com.example.demo.modulos.funcionario.model;
 
+import  com.example.demo.modulos.funcionario.dto.FuncionarioRequest;
+import com.example.demo.modulos.comum.model.Pessoa;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Funcionario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String nome;
-    @NotNull
-    @Size(min = 11, max = 14)
-    @Column(nullable = false)
-    private String cpf;
-    @NotNull
-    @Column(nullable = false)
-    @Min(value = 1)
-    private double salario;
+public class Funcionario extends Pessoa {
+    private String login;
+
+    private String senha;
 
     public Funcionario() {
     }
 
-    public Funcionario(String nome, String cpf, double salario) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.salario = salario;
+    public Funcionario(String nome, String cpf, LocalDate dataNascimento, String login, String senha) {
+        super(nome, cpf, dataNascimento);
+        this.login = login;
+        this.senha = senha;
     }
 
-    public Long getId() {
-        return id;
+    public String getLogin() {
+        return login;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getNome() {
-        return nome;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public double getSalario() {
-        return salario;
-    }
-
-    public void setSalario(double salario) {
-        this.salario = salario;
+    public static Funcionario of(FuncionarioResponse request) {
+        return new Funcionario(request.nome(), request.cpf(),
+                request.dataNascimento(), request.login(), request.senha());
     }
 }

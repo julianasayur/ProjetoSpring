@@ -1,8 +1,13 @@
 package com.example.demo.modulos.funcionario.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.example.demo.modulos.funcionario.model.Gerente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface GerenteRepository extends JpaRepository<Gerente, Long> {
+@Repository
+public interface GerenteRepository extends JpaRepository<Gerente, Integer> {
+
+    boolean existsByLoginIgnoreCase(String login);
+
+    boolean existsByLoginIgnoreCaseAndIdNot(String login, Integer id);
 }

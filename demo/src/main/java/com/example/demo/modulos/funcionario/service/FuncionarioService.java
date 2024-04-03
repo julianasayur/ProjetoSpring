@@ -1,60 +1,78 @@
 package com.example.demo.modulos.funcionario.service;
 
+import com.example.demo.modulos.comum.exception.NotFoundException;
+import com.example.demo.modulos.comum.exception.ValidacaoException;
+import com.example.demo.modulos.funcionario.dto.FuncionarioRequest;
+import com.example.demo.modulos.funcionario.dto.FuncionarioResponse;
 import com.example.demo.modulos.funcionario.model.Funcionario;
 import com.example.demo.modulos.funcionario.repository.FuncionarioRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
+import static com.example.demo.modulos.comum.util.DateUtil.validarAnteriorAoPeriodo;
 
 @Service
 public class FuncionarioService {
 
     @Autowired
-    FuncionarioRepository funcionarioRepository;
+    FuncionarioRepository repository;
 
-    public List<Funcionario> listarFuncionarios() {
-        return funcionarioRepository.findAll();
+    public List<FuncionarioResponse> listarFuncionarios() {
+        return repository.findAll().stream().map(FuncionarioResponse::of).toList();
     }
 
-    public Funcionario criar(Funcionario funcionario) {
-        return funcionarioRepository.save(funcionario);
+    public FuncionarioResponse criar(FuncionarioResponse request) {
+        validarloginExistente(request.login());
+        validarAnteriorAoPeriodo(request.dataNascimento(),
+                LocalDate.now(), "A data de nascimento nao pode ser maior que a data atual");
+        var funcionario = Funcionario.of(request);
+        return FuncionarioResponse.of(repository.save(funcionario));
     }
 
-    public Funcionario atualizar(Funcionario funcionario, Long id) {
-        if(verificaID(id)) {
-            //verdadeiro
-            funcionario.setId(id);
-            return funcionarioRepository.save(funcionario);
-        }
-        return null;
+    public FuncionarioResponse atualizar(Integer id, FuncionarioResponse request) {
+        validarFuncionarioExistente(id);
+        validarloginExistente(request.login(), id);
+        validarAnteriorAoPeriodo(request.dataNascimento(),
+                LocalDate.now(), "A data de nascimento nao pode ser maior que a data atual");
+        var funcionario = Funcionario.of(request);
+        funcionario.setId(id);
+        return FuncionarioResponse.of(repository.save(funcionario));
     }
 
-    private boolean verificaID(Long id) {
-        if(funcionarioRepository.existsById(id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean deletar(Long id) {
-        if(verificaID(id)) {
-            funcionarioRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+    public void deletar(Integer id) {
+        try {
+            repository.deleteById(id);
+        } catch (Exception ex) {
+            throw new ValidacaoException("Não foi possivel excluir funcionario. " .concat(ex.getMessage()));
         }
     }
 
     public int qtdFuncionarios() {
-        return funcionarioRepository.findAll().size();
+        return repository.findAll().size();
     }
 
-    public Optional<Funcionario> buscaPorID(Long id) {
-        return funcionarioRepository.findById(id);
+    public FuncionarioResponse findByLoginAndSenha(String login, String senha) {
+        return FuncionarioResponse.of(repository.findByLoginAndSenha(login, senha));
+    }
+
+    private void validarFuncionarioExistente(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new NotFoundException("Funcionario não encontrado.");
+        }
+    }
+
+    private void validarloginExistente(String login) {
+        if (repository.existsByLoginIgnoreCase(login)) {
+            throw new ValidacaoException("Item com esse nome já existe.");
+        }
+    }
+
+    private void validarloginExistente(String login, Integer id) {
+        if (repository.existsByLoginIgnoreCaseAndIdNot(login, id)) {
+            throw new ValidacaoException("Item com esse nome já existe.");
+        }
     }
 }
