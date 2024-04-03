@@ -1,8 +1,8 @@
-package com.example.demo.modulos.funcionario.controller;
+package com.example.demo.modulos.cliente.controller;
 
-import com.example.demo.modulos.funcionario.dto.GerenteRequest;
-import com.example.demo.modulos.funcionario.dto.GerenteResponse;
-import com.example.demo.modulos.funcionario.service.GerenteService;
+import com.example.demo.modulos.cliente.dto.ClienteRequest;
+import com.example.demo.modulos.cliente.dto.ClienteResponse;
+import com.example.demo.modulos.cliente.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,25 +11,25 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/gerente")
-public class GerenteController {
+@RequestMapping(value = "/cliente")
+public class ClienteController {
 
     @Autowired
-    GerenteService service;
+    private ClienteService service;
 
     @GetMapping
-    public List<GerenteResponse> listarGerentes() {
+    public List<ClienteResponse> listar() {
         return service.listar();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GerenteResponse criar(@Valid @RequestBody GerenteRequest request) {
+    public ClienteResponse criar(@Valid @RequestBody ClienteRequest request) {
         return service.criar(request);
     }
 
     @PutMapping("/{id}")
-    public GerenteResponse atualizar(@Valid @RequestBody GerenteRequest request, @PathVariable Integer id) {
+    public ClienteResponse atualizar(@Valid @RequestBody ClienteRequest request, @PathVariable Integer id) {
         return service.atualizar(request, id);
     }
 
